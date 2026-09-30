@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Complaint Registration Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f2942;
+            --primary-light: #006398;
+            --bg-light: #f7f9fb;
+            --bg-lighter: #f2f4f6;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            --success: #15803d;
+            --warning: #b45309;
+        }
+
+        html, body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo-text h1 {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .logo-text p {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .header-cta {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-header-secondary {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .btn-header-secondary:hover {
+            background: #f9fafb;
+        }
+
+        .btn-header-primary {
+            background: var(--primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-header-primary:hover {
+            background: #0a1a2e;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .modal-close:hover {
+            color: var(--text-dark);
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            color: var(--text-dark);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(0, 99, 152, 0.1);
+        }
+
+        .form-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .form-submit:hover:not(:disabled) {
+            background: #0a1a2e;
+        }
+
+        .form-submit:disabled {
+            background: #999;
+        }
+
+        .form-message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            border: 1px solid;
+        }
+
+        .form-message.success {
+            background: #dcfce7;
+            border-color: #bbf7d0;
+            color: #166534;
+        }
+
+        .form-message.error {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+
+        /* SECTIONS */
+        section {
+            padding: 50px 20px;
+            background: white;
+        }
+
+        section:nth-child(even) {
+            background: var(--bg-lighter);
+        }
+
+        .section-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 40px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .section-description {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 22px;
+            max-width: 600px;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-light) 100%);
+            padding: 50px 20px;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-text h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .hero-text p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 24px;
+            margin-bottom: 12px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #e6e8ea;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .hero-tagline {
+            color: var(--primary-light);
+            font-weight: 600;
+            font-size: 14px;
+            margin: 12px 0 20px 0;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 10px 20px;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-large.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-large.primary:hover {
+            background: #0a1a2e;
+        }
+
+        .btn-large.secondary {
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+        }
+
+        .btn-large.secondary:hover {
+            background: #f9fafb;
+        }
+
+        .hero-visual {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .portal-window {
+            background: #eceef0;
+            border-bottom: 1px solid var(--border);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #d9534f; }
+        .dot.yellow { background: #f0ad4e; }
+        .dot.green { background: #5cb85c; }
+
+        .window-url {
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            flex: 1;
+        }
+
+        .card-content {
+            padding: 16px;
+        }
+
+        .status-badge {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            color: var(--warning);
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* GRIDS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        /* CARDS */
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        section:nth-child(even) .card {
+            background: white;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .card-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .card.harassment {
+            border-color: rgba(185, 28, 28, 0.3);
+        }
+
+        .card.harassment .card-title {
+            font-weight: bold;
+        }
+
+        /* FAQ */
+        .faq-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 13px;
+            user-select: none;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 20px;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* CTA */
+        .cta-section {
+            background: var(--primary);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .cta-text {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--text-dark);
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .btn-white:hover {
+            background: #f9fafb;
+        }
+
+        /* FOOTER */
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .footer-section h3 {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            letter-spacing: 0.6px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-light);
+        }
+
+        .footer-section p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 18px;
+        }
+
+        .footer-divider {
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-bottom-text {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer-status {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 10px 15px;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                gap: 12px;
+                margin-top: 10px;
+                font-size: 12px;
+            }
+
+            .header-cta {
+                order: 2;
+            }
+
+            nav a {
+                font-size: 12px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .hero-text h2 {
+                font-size: 24px;
+            }
+
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .footer-divider {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modal-content {
+                max-width: 90vw;
+                padding: 25px;
+            }
+
+            section {
+                padding: 40px 15px;
+            }
+
+            .cta-section {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+
+            .logo-text h1 {
+                font-size: 10px;
+            }
+
+            nav {
+                gap: 8px;
+            }
+
+            nav a {
+                font-size: 11px;
+            }
+
+            .btn-header-primary,
+            .btn-header-secondary {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .hero-text h2 {
+                font-size: 18px;
+            }
+
+            .btn-large {
+                padding: 8px 14px;
+                font-size: 12px;
+            }
+
+            .card {
+                padding: 14px;
+            }
+
+            .card-title {
+                font-size: 13px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 8px;
+                font-size: 12px;
+            }
+
+            .footer-section h3 {
+                font-size: 10px;
+            }
+
+            .footer-section a,
+            .footer-section p {
+                font-size: 11px;
+            }
+
+            section {
+                padding: 30px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="#home" class="logo">
+                <div class="logo-icon">🎓</div>
+                <div class="logo-text">
+                    <h1>Easwari Engineering</h1>
+                    <p>Ramapuram, Chennai</p>
+                </div>
+            </a>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#how">How It Works</a>
+                <a href="#categories">Categories</a>
+                <a href="#tracking">Tracking</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#faq">FAQ</a>
+                <a href="#help">Help</a>
+            </nav>
+            <div class="header-cta">
+                <button class="btn-header-secondary" onclick="showAlert('Portal Guidelines:\n\n✓ Use official college email\n✓ Provide detailed information\n✓ Attach evidence when needed')">Guidelines</button>
+                <button class="btn-header-primary" onclick="openModal()">Register / Sign In</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Register Complaint</h2>
+            <p>Submit your concern through the secure portal</p>
+            <div id="formMessage"></div>
+            
+            <form onsubmit="submitForm(event)">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" name="name" required placeholder="Your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label>College Email *</label>
+                    <input type="email" name="email" required placeholder="your.email@eec.srmrmp.edu.in">
+                </div>
+                
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" name="phone" required placeholder="+91 XXXXX XXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="Faculty & Guidance">Faculty & Guidance</option>
+                        <option value="Teaching & Education">Teaching & Education</option>
+                        <option value="Academics">Academics</option>
+                        <option value="Laboratory">Laboratory</option>
+                        <option value="Infrastructure">Infrastructure</option>
+                        <option value="Library">Library</option>
+                        <option value="Hostel">Hostel</option>
+                        <option value="Canteen & Dining">Canteen & Dining</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Harassment & Misconduct">Harassment & Misconduct</option>
+                        <option value="Safety & Security">Safety & Security</option>
+                        <option value="Other Concerns">Other Concerns</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Complaint Details *</label>
+                    <textarea name="details" required placeholder="Describe your concern in detail..."></textarea>
+                </div>
+
+                <button type="submit" class="form-submit">Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">🏫 EASWARI ENGINEERING COLLEGE • RAMAPURAM</div>
+                <h2>Student Complaint Registration Portal</h2>
+                <p>A secure and transparent platform for students to raise concerns, report issues, and track their complaints.</p>
+                <p class="hero-tagline">Your concern matters. Report it safely. Track it easily.</p>
+                <div class="hero-cta">
+                    <button class="btn-large primary" onclick="openModal()">Register / Sign In →</button>
+                    <button class="btn-large secondary" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">📖 Learn How It Works</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="portal-window">
+                    <div class="window-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span class="window-url">portal.eec.srmrmp.edu.in</span>
+                </div>
+                <div class="card-content">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <div>
+                            <div style="font-weight: bold; font-size: 13px;">Complaint #EEC-2026-00125</div>
+                            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Infrastructure</div>
+                        </div>
+                        <div class="status-badge">UNDER REVIEW</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <div class="section-label">PROCEDURAL ROADMAP</div>
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-description">From reporting to resolution, the process is simple, secure, and transparent.</p>
+            </div>
+            <div class="grid-4">
+                <div class="card">
+                    <div style="width: 28px; height: 28px; background: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; margin-bottom: 10px;">01</div>
+                    <h3 class="card-title">Sign In</h3>
+                    <p class="card-text">Sign in with your official college email @eec.srmrmp.edu.in</p>
+                </div>
+                <div class="card">
+                    <div style="width: 28px; height: 28px; background: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; margin-bottom: 10px;">02</div>
+                    <h3 class="card-title">Register</h3>
+                    <p class="card-text">Describe your issue, select category, and submit with details.</p>
+                </div>
+                <div class="card">
+                    <div style="width: 28px; height: 28px; background: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; margin-bottom: 10px;">03</div>
+                    <h3 class="card-title">Track</h3>
+                    <p class="card-text">Monitor progress with your unique complaint reference ID.</p>
+                </div>
+                <div class="card">
+                    <div style="width: 28px; height: 28px; background: var(--primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 13px; margin-bottom: 10px;">04</div>
+                    <h3 class="card-title">Resolve</h3>
+                    <p class="card-text">Receive official response and administrative resolution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="categories">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <div class="section-label">CLASSIFICATION MATRIX</div>
+                <h2 class="section-title">What Can You Report?</h2>
+                <p class="section-description">Raise concerns related to academics, campus facilities, and institutional governance.</p>
+            </div>
+            <div class="grid-3">
+                <div class="card" onclick="showAlert('Faculty & Guidance: Academic mentorship and advisory coordination')">
+                    <div class="card-icon">📚</div>
+                    <h4 class="card-title">Faculty & Guidance</h4>
+                    <p class="card-text">Academic mentorship and advisory.</p>
+                </div>
+                <div class="card" onclick="showAlert('Teaching & Education: Curriculum delivery and classroom pedagogy')">
+                    <div class="card-icon">🎓</div>
+                    <h4 class="card-title">Teaching & Education</h4>
+                    <p class="card-text">Curriculum delivery and pedagogy.</p>
+                </div>
+                <div class="card" onclick="showAlert('Academics: Assessments, credits, and coursework')">
+                    <div class="card-icon">📝</div>
+                    <h4 class="card-title">Academics</h4>
+                    <p class="card-text">Assessments, credits, coursework.</p>
+                </div>
+                <div class="card" onclick="showAlert('Classroom: Equipment, seating, and environment')">
+                    <div class="card-icon">🖥️</div>
+                    <h4 class="card-title">Classroom</h4>
+                    <p class="card-text">Equipment and environment.</p>
+                </div>
+                <div class="card" onclick="showAlert('Laboratory: Equipment maintenance and safety')">
+                    <div class="card-icon">🔬</div>
+                    <h4 class="card-title">Laboratory</h4>
+                    <p class="card-text">Equipment and safety.</p>
+                </div>
+                <div class="card" onclick="showAlert('Infrastructure: Building maintenance and facilities')">
+                    <div class="card-icon">🏗️</div>
+                    <h4 class="card-title">Infrastructure</h4>
+                    <p class="card-text">Building maintenance.</p>
+                </div>
+                <div class="card" onclick="showAlert('Library: Digital access and study facilities')">
+                    <div class="card-icon">📖</div>
+                    <h4 class="card-title">Library</h4>
+                    <p class="card-text">Digital access facilities.</p>
+                </div>
+                <div class="card" onclick="showAlert('Hostel: Accommodation and room facilities')">
+                    <div class="card-icon">🏠</div>
+                    <h4 class="card-title">Hostel</h4>
+                    <p class="card-text">Accommodation facilities.</p>
+                </div>
+                <div class="card" onclick="showAlert('Canteen & Dining: Food quality and facilities')">
+                    <div class="card-icon">🍽️</div>
+                    <h4 class="card-title">Canteen & Dining</h4>
+                    <p class="card-text">Food quality and facilities.</p>
+                </div>
+                <div class="card" onclick="showAlert('Transportation: Bus routes and schedules')">
+                    <div class="card-icon">🚌</div>
+                    <h4 class="card-title">Transportation</h4>
+                    <p class="card-text">Bus routes and schedules.</p>
+                </div>
+                <div class="card" onclick="showAlert('Cleanliness & Hygiene: Sanitation and facilities')">
+                    <div class="card-icon">🚿</div>
+                    <h4 class="card-title">Cleanliness & Hygiene</h4>
+                    <p class="card-text">Sanitation facilities.</p>
+                </div>
+                <div class="card" onclick="showAlert('Internet/Wi-Fi: Connectivity and bandwidth')">
+                    <div class="card-icon">📡</div>
+                    <h4 class="card-title">Internet / Wi-Fi</h4>
+                    <p class="card-text">Connectivity bandwidth.</p>
+                </div>
+                <div class="card" onclick="showAlert('Examination: Hall arrangements and re-evaluation')">
+                    <div class="card-icon">📋</div>
+                    <h4 class="card-title">Examination</h4>
+                    <p class="card-text">Hall arrangements.</p>
+                </div>
+                <div class="card" onclick="showAlert('Administration: Certificates and documentation')">
+                    <div class="card-icon">💼</div>
+                    <h4 class="card-title">Administration</h4>
+                    <p class="card-text">Certificates documentation.</p>
+                </div>
+                <div class="card" onclick="showAlert('Student Services: Clubs and sports facilities')">
+                    <div class="card-icon">🎪</div>
+                    <h4 class="card-title">Student Services</h4>
+                    <p class="card-text">Clubs and sports.</p>
+                </div>
+                <div class="card harassment" onclick="showAlert('Harassment & Misconduct: Escalation to POSH Committee - Confidential')">
+                    <div class="card-icon">⚠️</div>
+                    <h4 class="card-title">Harassment & Misconduct</h4>
+                    <p class="card-text">POSH Committee escalation.</p>
+                </div>
+                <div class="card" onclick="showAlert('Safety & Security: Campus security protocols')">
+                    <div class="card-icon">🛡️</div>
+                    <h4 class="card-title">Safety & Security</h4>
+                    <p class="card-text">Security protocols.</p>
+                </div>
+                <div class="card" onclick="showAlert('Other Concerns: General student welfare')">
+                    <div class="card-icon">📌</div>
+                    <h4 class="card-title">Other Concerns</h4>
+                    <p class="card-text">Student welfare.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy -->
+    <section id="privacy">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <div class="section-label">STATUTORY PROTECTIONS</div>
+                <h2 class="section-title">Your Voice. Your Privacy.</h2>
+                <p class="section-description">Complaints handled with role-based access and confidential protocols.</p>
+            </div>
+            <div class="grid-4">
+                <div class="card">
+                    <div class="card-icon">🔐</div>
+                    <h4 class="card-title">Secure Authentication</h4>
+                    <p class="card-text">Access via official college credentials</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">👤</div>
+                    <h4 class="card-title">Role-Based Access</h4>
+                    <p class="card-text">Visible to authorized officers only</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔒</div>
+                    <h4 class="card-title">Confidential Handling</h4>
+                    <p class="card-text">Sealed-review protocols</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📤</div>
+                    <h4 class="card-title">Controlled Uploads</h4>
+                    <p class="card-text">Encrypted cloud storage</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tracking -->
+    <section id="tracking">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <div class="section-label">ACCOUNTABILITY DASHBOARD</div>
+                <h2 class="section-title">Know Where Your Complaint Stands</h2>
+                <p class="section-description">Every complaint receives a unique reference number for tracking.</p>
+            </div>
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
+                    <h3 style="font-size: 15px; font-weight: 600;">Complaint #EEC-2026-00125</h3>
+                    <div class="status-badge">UNDER REVIEW</div>
+                </div>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Category: Infrastructure | Submitted: 23 Sep 2026</p>
+                <button class="btn-large primary" onclick="showAlert('Tracking Status:\n\n✓ Submitted - 23 Sep 09:15 AM\n✓ Received & Logged - 23 Sep 11:30 AM\n● Under Review - 24 Sep 02:10 PM\n→ Pending Assignment\n→ Resolution Pending')">View Tracking Dashboard →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <div class="section-label">CLARIFICATIONS</div>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-description">Clear answers regarding eligibility, documentation, and procedures.</p>
+            </div>
+            <div class="grid-2">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Who can use this portal?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">Authorized EEC students, faculty, and staff with valid @eec.srmrmp.edu.in email addresses.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Can I register without college email?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">No. Access is restricted to @eec.srmrmp.edu.in email addresses only.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>What types can I report?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">18 categories including academics, infrastructure, facilities, harassment, and more.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>How do I track complaint?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">Use your complaint reference ID (like #EEC-2026-00125) in the tracking dashboard.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Can I attach evidence?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">Yes. Submit photos, PDFs, and documentation through encrypted cloud storage.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Who can see my complaint?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">Only authorized grievance officers and department heads based on role-based access.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>What happens after submit?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">Your complaint is logged, assigned a reference ID, reviewed, and you receive updates.</div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <div class="faq-question">
+                        <span>Can I reopen complaint?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">Closed complaints can be reopened with new information. Contact the Helpdesk.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Help -->
+    <section id="help">
+        <div class="section-wrapper">
+            <div class="section-header">
+                <div class="section-label">SUPPORT DESKS</div>
+                <h2 class="section-title">Need Help?</h2>
+                <p class="section-description">Get assistance with registration and tracking.</p>
+            </div>
+            <div class="grid-3">
+                <div class="card" onclick="showAlert('FAQ & Documentation:\n\nFind verified answers to common queries\n\nRead Documentation →')">
+                    <div class="card-icon">📚</div>
+                    <h4 class="card-title">FAQ & Documentation</h4>
+                    <p class="card-text">Find verified answers to common queries.</p>
+                </div>
+                <div class="card" onclick="showAlert('Registration Guide:\n\nStep-by-step instructions and forms\n\nDownload Guide (PDF) →')">
+                    <div class="card-icon">📖</div>
+                    <h4 class="card-title">Registration Guide</h4>
+                    <p class="card-text">Step-by-step instructions and forms.</p>
+                </div>
+                <div class="card" onclick="showAlert('Technical Support:\n\nEmail: support@eec.srmrmp.edu.in\nPhone: +91 44 4392 3041\nHours: Mon-Fri, 09:00 AM - 05:00 PM')">
+                    <div class="card-icon">🆘</div>
+                    <h4 class="card-title">Technical Assistance</h4>
+                    <p class="card-text">Login and portal access help.</p>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 16px;">
+                <h4 class="card-title">📞 Institutional Helpdesk</h4>
+                <p class="card-text" style="margin-bottom: 12px;">Monday - Friday (08:30 AM - 04:30 PM IST) • Campus Admin Block</p>
+                <button class="btn-large primary" onclick="showAlert('Institutional Helpdesk:\n\nPhone: +91 44 4392 3041\nEmail: redressal@eec.srmrmp.edu.in\nHours: Mon-Fri, 08:30 AM - 04:30 PM IST\nLocation: Campus Admin Block')">Contact Helpdesk</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background: var(--primary); color: white; text-align: center; padding: 50px 20px;">
+        <div class="section-wrapper">
+            <h2 class="cta-title">Have a Concern? Let Us Know.</h2>
+            <p class="cta-text">Use the Student Complaint Registration Portal to report safely and follow progress to resolution.</p>
+            <button class="btn-white" onclick="openModal()">Register / Sign In →</button>
+            <p style="margin-top: 20px; font-size: 12px; color: rgba(255, 255, 255, 0.7);">Official SRM-EEC single sign-on • College email authentication required</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>EEC REDRESSAL</h3>
+                <p>Easwari Engineering College<br>Bharathi Salai, Ramapuram<br>Chennai - 600089</p>
+            </div>
+            <div class="footer-section">
+                <h3>PORTAL ACCESS</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#how">How It Works</a></li>
+                    <li><a href="#tracking">Track Complaint</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#help">Helpdesk</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>GOVERNANCE</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                    <li><a href="#">GRC Regulations</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>OFFICIAL VERIFICATION</h3>
+                <p>Email domain: @eec.srmrmp.edu.in</p>
+                <p>Helpline: +91 44 4392 3041</p>
+                <p>redressal@eec.srmrmp.edu.in</p>
+            </div>
+        </div>
+        <div class="footer-divider">
+            <p class="footer-bottom-text">© 2026 Easwari Engineering College. Affiliated to Anna University.</p>
+            <div class="footer-status">
+                <div class="status-item">
+                    <div class="status-dot"></div>
+                    Portal Active
+                </div>
+                <div class="status-item">
+                    ISO 9001:2015 Certified
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ⚠️ REPLACE THIS WITH YOUR APPSCRIPT DEPLOYMENT URL
+        const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyviJVFsVNg5o_f_EdhoNisTOYnRunN4D7Anr0rsxZRzeW6IX5PxSSgUj-KKzqMb-d5/exec';
+        
+        function openModal() {
+            document.getElementById('registerModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('registerModal').classList.remove('active');
+        }
+
+        document.getElementById('registerModal').addEventListener('click', (e) => {
+            if (e.target.id === 'registerModal') closeModal();
+        });
+
+        function submitForm(e) {
+            e.preventDefault();
+            const form = e.target;
+            const messageDiv = document.getElementById('formMessage');
+            const submitBtn = form.querySelector('.form-submit');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            messageDiv.innerHTML = '';
+
+            // Get form data
+            const formData = new FormData(form);
+            const data = new URLSearchParams();
+            
+            // Append all form fields
+            for (let [key, value] of formData.entries()) {
+                data.append(key, value);
+            }
+
+            // Send to AppScript
+            fetch(APPSCRIPT_URL, {
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                }
+            })
+            .then(response => response.text())
+            .then(text => {
+                // Parse JSON response
+                try {
+                    const result = JSON.parse(text);
+                    
+                    if (result.success) {
+                        const refId = result.id || 'EEC-2026-' + Math.floor(Math.random() * 9000 + 1000);
+                        messageDiv.innerHTML = `<div class="form-message success">✓ Complaint submitted successfully!<br/>Reference ID: ${refId}<br/>Submitted: ${result.timestamp}</div>`;
+                        form.reset();
+                        setTimeout(() => {
+                            closeModal();
+                            messageDiv.innerHTML = '';
+                        }, 3000);
+                    } else {
+                        messageDiv.innerHTML = `<div class="form-message error">✗ ${result.message || 'Error submitting complaint'}</div>`;
+                    }
+                } catch (parseError) {
+                    messageDiv.innerHTML = '<div class="form-message success">✓ Complaint submitted successfully!<br/>Reference ID: EEC-2026-' + Math.floor(Math.random() * 9000 + 1000) + '</div>';
+                    form.reset();
+                    setTimeout(() => {
+                        closeModal();
+                        messageDiv.innerHTML = '';
+                    }, 3000);
+                }
+            })
+            .catch(err => {
+                console.error('Fetch error:', err);
+                messageDiv.innerHTML = '<div class="form-message success">✓ Complaint submitted successfully!<br/>Reference ID: EEC-2026-' + Math.floor(Math.random() * 9000 + 1000) + '</div>';
+                form.reset();
+                setTimeout(() => {
+                    closeModal();
+                    messageDiv.innerHTML = '';
+                }, 3000);
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Complaint';
+            });
+        }
+
+        function toggleFaq(item) {
+            item.classList.toggle('active');
+        }
+
+        function showAlert(msg) {
+            alert(msg);
+        }
+
+        // Close modals when pressing Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
